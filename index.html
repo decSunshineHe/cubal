@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CUBAL 32强落位预测</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">CUBAL Men&apos;s Championship</p>
+          <h1>32强落位预测</h1>
+          <p class="hero-text">
+            页面拆分为全国赛、分区赛、附加赛三个标签页。先录入四赛区前六与 7-10
+            名，再录附加赛 4 个分组与晋级名单，最后自动生成 32 强落位与对阵图。
+          </p>
+          <div class="hero-actions">
+            <button id="generate-btn" class="btn btn-primary" type="button">
+              生成 32 强落位
+            </button>
+          </div>
+        </div>
+        <aside class="hero-card">
+          <div class="hero-card-top">落位规则</div>
+          <ul class="rule-list">
+            <li>
+              同赛区规避原则：各赛区前四名落位时，同赛区球队分属不同1/4半区，且第1、4名同半区，第2、3名同半区。例如甲赛区冠军落位上半区，亚军则在下半区，季军直接落位下半区，第4名直接落位上半区，确保每1/4半区有不同赛区前四档种子球队。
+            </li>
+            <li>
+              单元内规避原则：上下半区各分4个小单元，每个单元仅1支同分区球队。各赛区5、6号种子抽签时需避开已有同赛区球队的，7、8号种子（含附加赛晋级队）自动落位剩余合规位置，最终每个单元1支同赛区球队，每1/4半区1-8号位种子各1支。
+            </li>
+          </ul>
+        </aside>
+      </header>
+
+      <section class="tab-shell">
+        <div class="tab-list" role="tablist" aria-label="CUBAL 功能分页">
+          <button
+            class="tab-button is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            data-tab-target="national-tab"
+          >
+            全国赛
+          </button>
+          <button
+            class="tab-button"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-tab-target="regional-tab"
+          >
+            分区赛
+          </button>
+          <button
+            class="tab-button"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-tab-target="playin-tab"
+          >
+            附加赛
+          </button>
+        </div>
+
+        <section id="national-tab" class="tab-panel is-active" role="tabpanel">
+          <div class="national-layout">
+            <section class="bracket-section">
+              <div class="section-title">
+                <div class="section-title-row">
+                  <span>32 强对阵图</span>
+                  <button
+                    id="toggle-fullscreen-btn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    全屏展示
+                  </button>
+                </div>
+                <p>参考往季视觉结构，展示上下半区的首轮落位与双败赛制结构概览。</p>
+              </div>
+              <div
+                id="message-box"
+                class="message-box"
+                aria-live="polite"
+              ></div>
+              <div id="bracket-board" class="bracket-board"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="regional-tab" class="tab-panel" role="tabpanel" hidden>
+          <section class="step-card">
+            <div class="section-title">
+              <span>分区赛录入</span>
+              <p>先完成四赛区前六名录入，再补录各赛区 7-10 名队伍。</p>
+            </div>
+            <div class="step-head">
+              <span class="step-index">步骤 1</span>
+              <div>
+                <h2>录入四赛区前 6 名</h2>
+                <p>每个赛区按名次填写队伍名称，系统会做缺失与重复检查。</p>
+              </div>
+            </div>
+            <div id="top6-sections" class="region-grid"></div>
+          </section>
+
+          <section class="step-card tab-gap">
+            <div class="step-head">
+              <span class="step-index">步骤 2</span>
+              <div>
+                <h2>录入各赛区 7-10 名</h2>
+                <p>
+                  这些队伍将进入附加赛分组，后续需要在附加赛标签页中完成分组和晋级录入。
+                </p>
+              </div>
+            </div>
+            <div id="regional-playin-sections" class="region-grid"></div>
+          </section>
+        </section>
+
+        <section id="playin-tab" class="tab-panel" role="tabpanel" hidden>
+          <div class="content-grid">
+            <section class="steps-panel">
+              <section class="step-card">
+                <div class="section-title">
+                  <span>附加赛分组</span>
+                  <p>
+                    录入 4 个小组的小组成员，并单独填写每组小组第一。每组默认 4
+                    队，共对应四赛区 7-10 名总计 16 队。
+                  </p>
+                </div>
+                <div
+                  id="playin-group-sections"
+                  class="region-grid group-grid"
+                ></div>
+              </section>
+
+              <section class="step-card">
+                <div class="section-title">
+                  <span>交叉赛晋级名单</span>
+                  <p>
+                    2/3 名交叉比赛的胜者在这里单独填写。系统会把 4 个小组第一和
+                    4 个交叉赛晋级队合并为附加赛 8 个全国赛名额。
+                  </p>
+                </div>
+                <div id="crossover-sections" class="preview-grid"></div>
+              </section>
+
+              <section class="step-card">
+                <div class="section-title">
+                  <span>附加赛晋级汇总</span>
+                  <p>
+                    实时预览 4 个小组第一和 4 个交叉赛晋级队，供全国赛落位使用。
+                  </p>
+                </div>
+                <div id="playin-qualified-preview" class="preview-grid"></div>
+              </section>
+            </section>
+
+            <aside class="results-panel">
+              <section class="results-card">
+                <div class="section-title compact">
+                  <span>7-10 名来源池</span>
+                  <p>
+                    这里汇总分区赛中录入的所有 7-10 名队伍，方便对照分组填写。
+                  </p>
+                </div>
+                <div id="regional-pool" class="summary-grid"></div>
+              </section>
+            </aside>
+          </div>
+        </section>
+      </section>
+    </div>
+    <button id="generate-fab-btn" class="btn btn-primary floating-generate-btn" type="button">
+      重新生成落位
+    </button>
+    <button id="timer-toggle-fab-btn" class="btn btn-secondary floating-timer-btn" type="button">
+      暂停定时器
+    </button>
+    <div id="fullscreen-title-banner" class="fullscreen-title-banner" aria-hidden="true">
+      CUBAL 全国赛32强落位图预测
+    </div>
+
+    <template id="region-top6-template">
+      <article class="region-card">
+        <div class="region-header">
+          <h3></h3>
+          <p>前 6 名队伍</p>
+        </div>
+        <div class="input-list"></div>
+      </article>
+    </template>
+
+    <template id="region-playin-seed-template">
+      <article class="region-card region-card-playin">
+        <div class="region-header">
+          <h3></h3>
+          <p>第 7-10 名队伍</p>
+        </div>
+        <div class="playin-hint">这些队伍会进入附加赛分组。</div>
+        <div class="input-list"></div>
+      </article>
+    </template>
+
+    <template id="playin-group-template">
+      <article class="region-card region-card-playin">
+        <div class="region-header">
+          <h3></h3>
+          <p>4 支小组队伍 + 小组第一</p>
+        </div>
+        <div class="input-list group-members"></div>
+        <div class="group-divider"></div>
+        <div class="input-list group-winner"></div>
+      </article>
+    </template>
+
+    <template id="crossover-template">
+      <article class="region-card region-card-playin">
+        <div class="region-header">
+          <h3></h3>
+          <p>交叉赛晋级</p>
+        </div>
+        <div class="playin-hint">填写由各组 2/3 名交叉比赛产生的晋级队。</div>
+        <div class="input-list crossover-winners"></div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
