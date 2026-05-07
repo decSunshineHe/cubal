@@ -93,72 +93,72 @@ const SAMPLE_STATE = {
   regions: {
     southeast: {
       top6: [
-        "华侨大学",
-        "中国矿业大学",
-        "宁波大学",
         "上海交大",
-        "华东师大",
-        "浙江大学",
+        "中国矿大",
+        "宁波大学",
+        "华侨大学",
+        "广州商学院",
+        "广东工大",
       ],
-      playinSeeds: ["厦门大学", "安徽大学", "温州大学", "合肥工大"],
+      playinSeeds: ["厦门大学", "华东师大", "浙江大学", "华南理工"],
     },
     southwest: {
       top6: [
-        "中南大学",
         "湖南师大",
-        "贵州大学",
-        "重庆文理",
-        "云南师大",
-        "西南交大",
+        "华中科技",
+        "湖南工大",
+        "武汉理工",
+        "广西大学",
+        "湖北工业",
       ],
-      playinSeeds: ["广西大学", "电子科大", "西华大学", "成都大学"],
+      playinSeeds: ["云南师大", "西南大学", "重庆文理", "成都体院"],
     },
     northeast: {
       top6: [
-        "北京大学",
         "清华大学",
-        "中国海洋大学",
-        "吉林大学",
+        "北京大学",
         "东北师大",
-        "山东大学",
+        "北京化工",
+        "吉林大学",
+        "北京师大",
       ],
-      playinSeeds: ["天津大学", "大连理工", "哈尔滨体院", "沈阳体院"],
+      playinSeeds: ["北京体育", "东北大学", "中国民航", "沈阳体院"],
     },
     northwest: {
       top6: [
         "太原理工",
-        "西安交大",
-        "河南大学",
         "山西大学",
-        "内蒙古大学",
-        "郑州大学",
+        "西安交大",
+        "西北工业",
+        "山西财经",
+        "中北大学",
       ],
-      playinSeeds: ["西北工大", "兰州大学", "宁夏大学", "青海大学"],
+      playinSeeds: ["西电科大", "石河子大学", "山西师大", "内蒙师大"],
     },
   },
   playinGroups: [
     {
       label: "A组",
-      teams: ["厦门大学", "广西大学", "天津大学", "西北工大"],
-      winner: "厦门大学",
+      teams: ["西电科大", "华东师大", "重庆文理", "沈阳体院"],
+      winner: "",
     },
     {
       label: "B组",
-      teams: ["安徽大学", "电子科大", "大连理工", "兰州大学"],
-      winner: "电子科大",
+      teams: ["厦门大学", "西南大学", "中国民航", "内蒙师大"],
+      winner: "",
     },
     {
       label: "C组",
-      teams: ["温州大学", "西华大学", "哈尔滨体院", "宁夏大学"],
-      winner: "宁夏大学",
+      teams: ["云南师大", "东北大学", "山西师大", "华南理工"],
+      winner: "",
     },
     {
       label: "D组",
-      teams: ["合肥工大", "成都大学", "沈阳体院", "青海大学"],
-      winner: "成都大学",
+      teams: ["北京体育", "石河子大学", "浙江大学", "成都体院"],
+      winner: "",
     },
   ],
-  crossoverWinners: ["天津大学", "兰州大学", "温州大学", "沈阳体院"],
+  crossoverWinners: ["", "", "", ""],
 };
 
 const state = {
@@ -224,6 +224,9 @@ function createEmptyState() {
 }
 
 function loadState() {
+  if (!window.localStorage.getItem(STORAGE_KEY)) {
+    return structuredClone(SAMPLE_STATE);
+  }
   const fallback = createEmptyState();
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
